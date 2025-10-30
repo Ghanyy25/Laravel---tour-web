@@ -1,57 +1,51 @@
 @extends('template.master')
 
+@section('title', 'Destinasi Wisata - Eksplor Makassar') {{-- Judul spesifik untuk halaman ini --}}
+
 @section('content')
+<div class="bg-gray-100 py-16 px-4">
+    <div class="container mx-auto">
+        <h2 class="text-3xl font-bold text-center text-[#222831] mb-2.5" data-aos="fade-up">Destinasi Populer di Makassar</h2>
+        <div class="w-20 h-1 bg-[#00ADB5] rounded-sm mx-auto mb-12" data-aos="fade-up" data-aos-delay="100"></div>
 
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Wisata Anda</title>
-    
-    {{-- Menggunakan Tailwind CSS via CDN untuk kemudahan --}}
-    {{-- Dalam proyek nyata, gunakan Vite (npm run dev) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    {{-- (Opsional) Jika Anda menggunakan plugin Tailwind --}}
-    <script>
-      tailwind.config = {
-        plugins: [
-          require('@tailwindcss/line-clamp'),
-        ],
-      }
-    </script>
-</head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <a href="/" class="text-2xl font-bold text-blue-600">TravelGo</a>
+            {{-- Looping data destinasi (Pastikan variabel $destinasiList dikirim dari route/controller) --}}
+            @isset($destinasiList)
+                @forelse ($destinasiList as $destinasi)
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 200 }}">
+                    {{-- Pastikan path gambar benar atau gunakan gambar dari data --}}
+                    <img src="{{ $destinasi['gambar'] ?? asset('images/placeholder.jpg') }}" alt="{{ $destinasi['nama'] ?? 'Nama Destinasi' }}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-[#222831]">{{ $destinasi['nama'] ?? 'Nama Destinasi' }}</h3>
+                        <p class="text-sm text-gray-500 leading-relaxed line-clamp-3">
+                            {{ $destinasi['deskripsi_singkat'] ?? 'Deskripsi singkat destinasi akan muncul di sini.' }}
+                        </p>
+                        {{-- Tautan ke halaman detail menggunakan route name dan slug --}}
+                        <a href="{{ isset($destinasi['slug']) ? route('destinasi.show', ['slug' => $destinasi['slug']]) : '#' }}" class="inline-block mt-4 text-sm text-blue-500 hover:text-blue-700">
+                            Lihat Detail &rarr;
+                        </a>
+                    </div>
                 </div>
-                <div class="flex space-x-6">
-                    <a href="/" class="text-gray-600 hover:text-blue-600">Home</a>
-                    <a href="{{ route('destinations.index') }}" class="text-blue-600 font-semibold">Destinasi</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-600">Tentang Kami</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-600">Kontak</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <main>
-        {{-- Di sinilah konten dari file 'index.blade.php' akan disuntikkan --}}
-        @yield('content')
-    </main>
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-16">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; {{ date('Y') }} TravelGo. Semua Hak Dilindungi.</p>
-            <p class="text-sm text-gray-500 mt-2">
-                Dibuat dengan ❤️ di Laravel
-            </p>
-        </div>
-    </footer>
-    </body>
-</html>
+                @empty
+                    <p class="text-center text-gray-500 col-span-full">Belum ada data destinasi yang tersedia.</p>
+                @endforelse
+            @else
+                {{-- Fallback jika $destinasiList tidak ada --}}
+                 <p class="text-center text-gray-500 col-span-full">Gagal memuat data destinasi.</p>
+            @endisset
 
+        </div>
+    </div>
+</div>
 @endsection
+
+{{-- Script & Style Opsional untuk AOS (jika belum ada di master layout) --}}
+@push('scripts')
+{{-- <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script> --}}
+{{-- <script> AOS.init(); </script> --}}
+@endpush
+
+@push('styles')
+{{-- <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"> --}}
+@endpush

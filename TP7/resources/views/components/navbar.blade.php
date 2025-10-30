@@ -2,9 +2,9 @@
         '',
         'w-full transition-all duration-300', 
         
-        'fixed top-0 left-0 z-20 bg-transparent text-white' => request()->is('/'), 
+        'absolute top-0 left-0 z-20 bg-transparent text-white' => request()->is('/'), 
 
-        'relative bg-white text-gray-800 shadow-md' => ! request()->is('/')
+        'sticky top-0 bg-white text-gray-800 shadow-md' => ! request()->is('/')
     ])>
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
